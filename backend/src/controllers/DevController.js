@@ -4,6 +4,8 @@ const Dev = require('../models/Dev');
 const parseStringAsArray = require('../utils/parseStringAsArray');
 const getLocationPoint = require('../utils/getLocationPoint');
 
+const { findConnections, sendMessage } = require('../websocket');
+
 module.exports = {
   async index(req, res) {
     const devs = await Dev.find();
@@ -33,6 +35,16 @@ module.exports = {
         techs: techList,
         location: getLocationPoint(latitude, longitude)
       });
+
+      const sendSocketMessageTo = findConnections(
+        {
+          latitude,
+          longitude
+        },
+        techList
+      );
+
+      sendMessage(sendSocketMessageTo, 'new-dev', dev);
     }
 
     return res.json(dev);
