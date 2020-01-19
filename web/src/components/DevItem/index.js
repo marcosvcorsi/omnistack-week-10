@@ -2,7 +2,18 @@ import React from 'react';
 
 import './styles.css';
 
-function DevItem({ dev }) {
+import { MdEdit, MdClose } from 'react-icons/md'
+
+function DevItem({ dev, remove, edit }) {
+
+  function handleRemove() {
+    remove(dev._id);
+  }
+
+  function handleEdit() {
+    edit(dev);
+  }
+
   return (
     <li className="dev-item">
       <header>
@@ -11,6 +22,8 @@ function DevItem({ dev }) {
           <strong>{dev.name}</strong>
           <span>{dev.techs.join(', ')}</span>
         </div>
+        <MdEdit className="action-button" onClick={handleEdit} />
+        <MdClose className="action-button" onClick={handleRemove} />
       </header>
       <p>{dev.bio}</p>
       <a href={`https://github.com/${dev.github_username}`}>

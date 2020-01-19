@@ -12,18 +12,27 @@ import './Main.css';
 
 function App() {
   const [devs, setDevs] = useState([]);
+  const [devEdit, setDevEdit] = useState(null);
 
   useEffect(() => {
-    async function loadDevs() {
-      const response = await api.get('/devs');
-
-      setDevs(response.data);
-    }
-
     loadDevs();
   }, []);
 
-  async function handleAddDev(data) {
+  async function loadDevs() {
+    const response = await api.get('/devs');
+
+    setDevs(response.data);
+  }
+
+  function handleAddDev(data) {
+    if (devEdit) {
+      editDev(data);
+    } else {
+      saveDev(data);
+    }
+  }
+
+  async function saveDev(data) {
     const response = await api.post('/devs', data);
 
     if (response.data) {
@@ -31,17 +40,39 @@ function App() {
     }
   }
 
+  async function editDev(data) {
+    const { _id } = data;
+
+    const response = await api.put(`/devs/${_id}`, data);
+
+    if (response.data) {
+      setDevEdit(null);
+      loadDevs();
+    }
+  }
+
+  async function removeDev(id) {
+    await api.delete(`/devs/${id}`);
+
+    const currentDevs = devs.filter(dev => dev._id !== id);
+    setDevs([...currentDevs]);
+  }
+
+  function handleEditDev(data) {
+    setDevEdit(data);
+  }
+
   return (
     <div id="app">
       <aside>
-        <strong>Cadastrar</strong>
+        <strong>{devEdit ? 'Editar' : 'Cadastrar'}</strong>
 
-        <DevForm onSubmit={handleAddDev} />
+        <DevForm onSubmit={handleAddDev} data={devEdit} />
       </aside>
       <main>
         <ul>
           {devs.map(dev => (
-            <DevItem key={dev._id} dev={dev} />
+            <DevItem key={dev._id} dev={dev} remove={removeDev} edit={handleEditDev} />
           ))}
         </ul>
       </main>

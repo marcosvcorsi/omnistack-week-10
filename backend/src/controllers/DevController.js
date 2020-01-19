@@ -53,7 +53,7 @@ module.exports = {
   async update(req, res) {
     const { id } = req.params;
 
-    const { techs, latitude, longitude, name, avatar_url } = req.body;
+    const { techs, latitude, longitude } = req.body;
 
     const techList = parseStringAsArray(techs, ', ');
 
@@ -63,8 +63,6 @@ module.exports = {
       },
       {
         $set: {
-          name,
-          avatar_url,
           techs: techList,
           location: getLocationPoint(latitude, longitude)
         }

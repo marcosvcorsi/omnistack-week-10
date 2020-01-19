@@ -19,6 +19,7 @@ li.dev-item header img {
 
 li.dev-item header .user-info {
   margin-left: 10px;
+  flex: 1;
 }
 
 .user-info strong {
@@ -48,4 +49,15 @@ li.dev-item a {
 
 li.dev-item a:hover {
   color: #5a2ea6;
+}
+
+li.dev-item header .action-button {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+li.dev-item header .action-button:hover {
+  color: #333;
 }

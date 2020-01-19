@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
-function DevForm({ onSubmit }) {
+function DevForm({ onSubmit, data }) {
+  const [id, setId] = useState(null);
   const [github_username, setGithubUsername] = useState('');
   const [techs, setTechs] = useState('');
   const [latitude, setLatitude] = useState('');
@@ -23,10 +24,20 @@ function DevForm({ onSubmit }) {
     );
   }, []);
 
+  useEffect(() => {
+    if (data) {
+      setId(data._id);
+      setGithubUsername(data.github_username);
+      setTechs(data.techs);
+    }
+  }, [data])
+
+
   async function handleSubmit(e) {
     e.preventDefault();
 
     await onSubmit({
+      _id: id,
       github_username,
       techs,
       latitude,
@@ -35,6 +46,7 @@ function DevForm({ onSubmit }) {
 
     setGithubUsername('');
     setTechs('');
+    setId(null);
   }
 
   return (
@@ -46,6 +58,7 @@ function DevForm({ onSubmit }) {
           id="github_username"
           value={github_username}
           onChange={e => setGithubUsername(e.target.value)}
+          disabled={id}
           required
         />
       </div>
